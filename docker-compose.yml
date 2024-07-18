@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:4.2
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=nest-task
+
+  nestjs:
+    build: .
+    container_name: nestjs
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    environment:
+      - REQUEST_URL=https://eos.greymass.com/v1/history/get_actions
+      - DB_NAME=nest-task
+      - HOST=mongo
+      - PORT=27017
+
+volumes:
+  mongo-data:
